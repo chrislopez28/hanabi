@@ -207,15 +207,21 @@ def game_view(players, current_player):
 
 class Game:
     """Class for a Hanabi game."""
+
     def __init__(self, name=None):
         self.name = name
-        self.players = [Player("Player 1"), Player("Jessica"), Player("Emile")]
+        self.players = [Player("P1"), Player("P2"), Player("P3")]
         self.deck = Deck()
         self.board = Board()
 
     def start_game(self):
         """Start a game of Hanabi."""
+        print("***** HANABI *****\n")
+        print("A 3 player game will be started. You will have to act for each player.\n")
+        input(">> Press Enter to continue...\n")
         self.deal_game()
+        print("Deck shuffled. Cards dealt.\n")
+        input(">> Press Enter to continue...\n")
         self.game_loop()
 
     def deal_game(self):
@@ -237,37 +243,37 @@ class Game:
 
             deciding = True
             while deciding:
-                x = input(f"\n{current_player} to act.\nType one of the following commands and press <enter>: 'p' - play a card, 'd' - discard a card, 'h' - give a hint.\n")
+                x = input(f"\n{current_player} to act.\n>> Type one of the following commands and press Enter: 'p' - play a card, 'd' - discard a card, 'h' - give a hint.\n")
                 if x == "p":
                     while True:
-                        n = input("\nChoose a card to play (1-5).\n")
+                        n = input("\n>> Choose a card to play (1-5).\n")
                         if n not in ("1", "2", "3", "4", "5"):
                             print("Invalid card number")
                         else:
-                            n += 1
+                            n = str(int(n) + 1)
                             break
                     self.players[turn % 3 - 1].play_card(self.board, self.deck, int(n))
                     deciding = False
                 elif x == "d":
                     while True:
-                        n = input("\nChoose a card to discard (1-5).\n")
+                        n = input("\n>> Choose a card to discard (1-5).\n")
                         if n not in ("1", "2", "3", "4", "5"):
                             print("Invalid card number")
                         else:
-                            n += 1
+                            str(int(n) + 1)
                             break
                     self.players[turn % 3 - 1].discard_card(self.board, self.deck, int(n))
                     deciding = False
                 elif x == "h":
                     while True:
                         current_num = turn % 3
-                        p = input("\nChoose a player to give a hint to (1-3) and presee <enter>. (Note: you cannot give a hint to yourself)\n")
+                        p = input("\n>> Choose a player to give a hint to (1-3) and press Enter. (Note: you cannot give a hint to yourself)\n")
                         if (p not in ("1", "2", "3") or (int(p) == current_num)):
                             print("invalid player")
                         else:
                             break
                     while True:
-                        h = input("\nChoose a suit or a value (i.e. 1-5 or Blue, Green, Red, White, Yellow)\n")
+                        h = input("\n>> Choose a suit or a value (i.e. 1-5 or Blue, Green, Red, White, Yellow)\n")
                         if h not in ("1", "2", "3", "4", "5", "Blue", "Green", "Red", "White", "Yellow"):
                             print("Invalid hint")
                         else:
