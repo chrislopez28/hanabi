@@ -199,13 +199,11 @@ class Player:
 def game_view(players, current_player):
     """Prints out visible cards to current player"""
     for player in players:
-        print("\n", "Player", player.position, "-", player.name)
+        print(f"\n**Player {player.position} --- {player.name}")
         if player == current_player:
             player.show_concealed_hand()
         else:
             player.show_hand()
-
-
 
 class Game:
     """Class for a Hanabi game."""
@@ -223,56 +221,54 @@ class Game:
     def deal_game(self):
         """Deal game to players."""
         self.deck.shuffle()
-        print('Deck shuffled')
-        self.deck.show()
         for player in self.players:
             for i in range(5):
-                print(player.name)
                 player.draw(self.deck)
 
     def game_loop(self):
         """Loop through players' turns."""
         turn = 1
         while (self.board.chances != 0) or (not self.board.check_complete()):
-            print("\n********** Turn {}: {} **********".format(turn, \
-                self.players[turn % 3 - 1].name))
+            current_player = self.players[turn % 3 - 1].name
+            print(f"\n********** Turn {turn}: {current_player} **********")
             self.board.show_board()
             print("Cards Remaining:", self.deck.card_count())
             self.game_view()
 
             deciding = True
             while deciding:
-                x = input("\n Type 'p' to play a card. Type 'd' to discard a card. Type 'h' to give a hint")
+                x = input(f"\n{current_player} to act.\nType one of the following commands and press <enter>: 'p' - play a card, 'd' - discard a card, 'h' - give a hint.\n")
                 if x == "p":
                     while True:
-                        n = input("\n Choose a card to play (0-4).\n")
-                        if n not in ("0", "1", "2", "3", "4"):
+                        n = input("\nChoose a card to play (1-5).\n")
+                        if n not in ("1", "2", "3", "4", "5"):
                             print("Invalid card number")
                         else:
+                            n += 1
                             break
                     self.players[turn % 3 - 1].play_card(self.board, self.deck, int(n))
                     deciding = False
                 elif x == "d":
                     while True:
-                        n = input("\n Choose a card to discard (0-4).\n")
-                        if n not in ("0", "1", "2", "3", "4"):
+                        n = input("\nChoose a card to discard (1-5).\n")
+                        if n not in ("1", "2", "3", "4", "5"):
                             print("Invalid card number")
                         else:
+                            n += 1
                             break
                     self.players[turn % 3 - 1].discard_card(self.board, self.deck, int(n))
                     deciding = False
                 elif x == "h":
                     while True:
-                        p = input("\n Choose a player to give a hint to (1-3).\n")
-                        if p not in ("1", "2", "3"):
+                        current_num = turn % 3
+                        p = input("\nChoose a player to give a hint to (1-3) and presee <enter>. (Note: you cannot give a hint to yourself)\n")
+                        if (p not in ("1", "2", "3") or (int(p) == current_num)):
                             print("invalid player")
                         else:
                             break
                     while True:
-                        h = input("\n Choose a suit or a value (i.e. 1-5 or \
-                            Blue, Green, Red, White, Yellow")
-                        if h not in ("1", "2", "3", "4", "5", "Blue", "Green", \
-                            "Red", "White", "Yellow"):
+                        h = input("\nChoose a suit or a value (i.e. 1-5 or Blue, Green, Red, White, Yellow)\n")
+                        if h not in ("1", "2", "3", "4", "5", "Blue", "Green", "Red", "White", "Yellow"):
                             print("Invalid hint")
                         else:
                             break
@@ -295,7 +291,7 @@ class Game:
     def game_view(self):
         """Prints out visible cards to current player"""
         for num, player in enumerate(self.players):
-            print("\n", "Player", num + 1, "-", player.name)
+            print(f"\n*** Player {num + 1} ({player.name}) Hand: ***")
             if num == 0:
                 player.show_concealed_hand()
             else:
@@ -304,3 +300,6 @@ class Game:
 class View:
     """Class for a view of the game."""
     pass
+
+game = Game("game")
+game.start_game()
