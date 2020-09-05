@@ -61,7 +61,7 @@ class Deck:
     def draw_card(self):
         """Pops top card from the deck."""
         if self.cards:
-            self.cards.pop()
+            return self.cards.pop()
 
     def card_count(self):
         """Return number of cards remaining in deck"""
@@ -223,8 +223,11 @@ class Game:
     def deal_game(self):
         """Deal game to players."""
         self.deck.shuffle()
+        print('Deck shuffled')
+        self.deck.show()
         for player in self.players:
             for i in range(5):
+                print(player.name)
                 player.draw(self.deck)
 
     def game_loop(self):
@@ -239,8 +242,7 @@ class Game:
 
             deciding = True
             while deciding:
-                x = input("\n Type 'p' to play a card. Type 'd' to discard a card. \
-                    Type 'h' to give a hint")
+                x = input("\n Type 'p' to play a card. Type 'd' to discard a card. Type 'h' to give a hint")
                 if x == "p":
                     while True:
                         n = input("\n Choose a card to play (0-4).\n")
